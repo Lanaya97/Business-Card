@@ -9,4 +9,8 @@
     <PublishAssetsDirectory>
     </PublishAssetsDirectory>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="src\app\card\models\" />
+    <Folder Include="src\utils\enums\" />
+  </ItemGroup>
 </Project>

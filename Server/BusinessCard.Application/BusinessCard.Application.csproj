@@ -1,12 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<OutputType>Library</OutputType>
 		<RootNamespace>BusinessCard.Application</RootNamespace>
 		<AssemblyName>BusinessCard.Application</AssemblyName>
 		<Deterministic>true</Deterministic>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="AutoMapper" Version="13.0.1" />
+	  <PackageReference Include="FluentValidation" Version="11.10.0" />
+	  <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+	  <PackageReference Include="MediatR" Version="12.4.1" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\BusinessCard.Domain\BusinessCard.Domain.csproj" />
+	</ItemGroup>
 
 </Project>

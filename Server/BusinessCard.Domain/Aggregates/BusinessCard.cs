@@ -1,4 +1,5 @@
-﻿using BusinessCard.Domain.Enums;
+﻿using BusinessCard.Domain.Abstractions;
+using BusinessCard.Domain.Enums;
 using BusinessCard.Domain.ValueObjects;
 using System;
 
@@ -21,8 +22,17 @@ namespace BusinessCard.Domain
 
         public string? Photo { get; private set; } = string.Empty;
 
+        #region Constructors
+        /// <summary>
+        /// Used for EF-Migration
+        /// </summary>
+        private BusinessCard()
+        {
+
+        }
         private BusinessCard(string name, Gender gender, DateTime dateOfBirth, string email, PhoneNumber phoneNumber, Address address, string? photo = null)
         {
+            Id = Guid.NewGuid();
             Name = name;
             Gender = gender;
             DateOfBirth = dateOfBirth;
@@ -31,6 +41,9 @@ namespace BusinessCard.Domain
             Address = address;
             Photo = photo;
         }
+        #endregion
+
+        #region Factory
 
         public static BusinessCard Create(
         string name,
@@ -50,7 +63,9 @@ namespace BusinessCard.Domain
 
             return new BusinessCard(name, gender, dateOfBirth, email, phone, address, photo);
         }
+        #endregion
 
+        #region Methods
         public BusinessCard Update(string? name = null,
                                    Gender? gender = null,
                                    DateTime? dateOfBirth = null,
@@ -90,6 +105,13 @@ namespace BusinessCard.Domain
 
             return this;
         }
-        
+
+        public void Delete()
+        {
+            MarkAsDeleted();
+            DateDeleted = DateTime.UtcNow;
+        }
+        #endregion
+
     }
 }

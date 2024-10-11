@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BusinessCard.Domain.Abstractions;
 
 namespace BusinessCard.Domain.ValueObjects
 {

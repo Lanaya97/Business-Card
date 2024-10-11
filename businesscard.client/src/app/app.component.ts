@@ -1,37 +1,48 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
-}
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateCardComponent } from './card/create-card/create-card.component';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { Filter } from '../app/common/filter';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-  public forecasts: WeatherForecast[] = [];
+export class AppComponent {
+  constructor(private dialog: MatDialog) { }
 
-  constructor(private http: HttpClient) {}
+  name: string = '';
+  email: string = '';
+  filters: Filter[] = [];
 
-  ngOnInit() {
-    this.getForecasts();
+  openCreateCardDialog(): void {
+    this.dialog.open(CreateCardComponent, {
+      width: '80%', // Set the width as needed
+      height: '80%',
+      maxHeight: '90vh', // Optional: Set maxHeight directly when opening
+      disableClose: true,
+    });
+
   }
 
-  getForecasts() {
-    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe(
-      (result) => {
-        this.forecasts = result;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+  onApplyFiltersClick(menuTrigger: MatMenuTrigger) {
+    menuTrigger.closeMenu();
+
+    const filterParams: Filter[] = [];
+    if (this.name)
+      filterParams.push({ name: 'name', value: this.name })
+    if (this.email)
+      filterParams.push({ name: 'email', value: this.email })
+
+    this.filters = filterParams;
   }
 
-  title = 'businesscard.client';
+  onReset(menuTrigger: MatMenuTrigger) {
+    menuTrigger.closeMenu();
+
+    this.name = '';
+    this.email = '';
+    this.filters = [];
+  }
 }
