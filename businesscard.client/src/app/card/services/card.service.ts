@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BusinessCard, BusinessCardReadModel } from '../models/business-card-model';
 import { Result } from '../../common/result';
+import { BusinessCard, BusinessCardReadModel } from '../models/business-card-model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +22,25 @@ export class CardService {
 
   deleteCard(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  exportToCsv(data: any): Observable<Blob> {
+    return this.http.post(`${this.apiUrl}/export/csv`, data, { responseType: 'blob' });
+  }
+
+  exportToXml(data: any): Observable<Blob> {
+    return this.http.post(`${this.apiUrl}/export/xml`, data, { responseType: 'blob' });
+  }
+
+  importFromCsv(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${this.apiUrl}/import/csv`, formData);
+  }
+
+  importFromXml(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${this.apiUrl}/import/xml`, formData);
   }
 }

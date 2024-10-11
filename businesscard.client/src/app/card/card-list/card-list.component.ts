@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
@@ -22,9 +22,33 @@ export class CardListComponent implements OnInit, OnChanges {
 
   // Pagination properties
   length = 0;
-  pageSize = 10;
-  pageIndex = 0;
 
+  private _pageSize: number = 10;
+  private _pageNumber: number = 0;
+
+  @Output() paginationChange: EventEmitter<{ pageSize: number; pageNumber: number }> = new EventEmitter();
+
+  get pageSize(): number {
+    return this._pageSize;
+  }
+
+  set pageSize(value: number) {
+    this._pageSize = value;
+    this.emitPaginationChange();
+  }
+
+  get pageNumber(): number {
+    return this._pageNumber;
+  }
+
+  set pageNumber(value: number) {
+    this._pageNumber = value;
+    this.emitPaginationChange();
+  }
+  private emitPaginationChange() {
+    // Emit both pageSize and pageNumber together in a single event
+    this.paginationChange.emit({ pageSize: this._pageSize, pageNumber: this._pageNumber });
+  }
 
   constructor(private cardService: CardService)
   {
@@ -37,7 +61,6 @@ export class CardListComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     // Reload data when filters change
-    debugger
     if (changes['filters']) {
 
       this.loadCards(this.filters);
@@ -46,7 +69,7 @@ export class CardListComponent implements OnInit, OnChanges {
   loadCards(filters: Filter[] = []): void {
     const params = {
       draw: 1,
-      start: this.pageIndex * this.pageSize,
+      start: this.pageNumber * this.pageSize,
       length: this.pageSize,
       filters: filters
     };
@@ -61,12 +84,12 @@ export class CardListComponent implements OnInit, OnChanges {
 
 
   applyFilters() {
-    this.pageIndex = 0; // Reset to the first page
+    this.pageNumber = 0; // Reset to the first page
     this.loadCards();
   }
 
   onPaginateChange(event: PageEvent) {
-    this.pageIndex = event.pageIndex;
+    this.pageNumber = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadCards();
   }

@@ -19,3 +19,18 @@ main {
   flex-direction: column;
   gap: 20px;
 }
+
+.custom-file-upload {
+  display: inline-block;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #007bff; /* Blue color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+}
+
+  .custom-file-upload:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }

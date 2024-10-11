@@ -18,7 +18,7 @@ namespace BusinessCard.Application.DTOs.BusinessCard
 
         public string CountryCode { get; set; }
 
-        public string Phone { get; set; }
+        public string Number { get; set; }
 
         public string Street { get; set; }
 
