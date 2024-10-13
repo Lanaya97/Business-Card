@@ -1,12 +1,11 @@
 
  export interface BusinessCard {
-  id?: number;
   name: string;
   email: string;
-  gender?: string;
+  gender: string;
   dateOfBirth?: string;
   countryCode: string;
-  phone: string;
+  number: string;
   street: string;
   city: string;
   zipcode: string;
@@ -14,7 +13,7 @@
 }
 
 export interface BusinessCardReadModel {
-  id?: number;
+  id?: string;
   name: string;
   email: string;
   gender?: string;

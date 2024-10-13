@@ -46,7 +46,9 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         if (exception is ValidationException)
         {
             Result<Dictionary<string, List<string>>> response = new();
-            response.Failed().WithMessage(GetTitle(exception)).WithData(GetErrors(exception));
+            var errors = GetErrors(exception);
+            response.Failed().WithMessage(GetTitle(exception)).WithData(errors);
+            response.WithException(exception.InnerException ?? exception);
             await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(response));
         }
         else

@@ -1,7 +1,10 @@
-import { AfterViewInit, Component, NgZone, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, NgZone, OnDestroy, Output, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { CardService } from '../services/card.service';
+import { SwalHelpers } from '../../../utils/swal-helpers';
+import { Subscription } from 'rxjs';
+import { BusinessCard } from '../models/business-card-model';
 
 
 @Component({
@@ -9,27 +12,37 @@ import { CardService } from '../services/card.service';
   templateUrl: './create-card.component.html',
   styleUrls: ['./create-card.component.css']
 })
-export class CreateCardComponent implements AfterViewInit{
-  @ViewChild('stepper') stepper! : MatStepper;
+export class CreateCardComponent implements OnDestroy {
+
+
+  @ViewChild('stepper') stepper!: MatStepper;
   step = 1;
 
-  cardData = {
+  cardData : BusinessCard = {
     name: '',
     email: '',
     gender: '',
     dateOfBirth: '',
     countryCode: '',
-    phone: '',
+    number: '',
     street: '',
     city: '',
     zipcode: '',
     photo: ''
   };
 
-  constructor(private ngZone: NgZone, private cardService: CardService, public dialogRef: MatDialogRef<CreateCardComponent>) { }
-    ngAfterViewInit(): void {
+  translate: any;
+  isLoading: boolean = false;
 
-    }
+  private readonly Subscriptions: Subscription[] = [];
+
+  constructor(private ngZone: NgZone, private cardService: CardService, public dialogRef: MatDialogRef<CreateCardComponent>) {
+
+  }
+
+  ngOnDestroy(): void {
+    this.Subscriptions.forEach((sb) => sb.unsubscribe());
+  }
 
   nextStep(cardForm: any): void {
     if (cardForm.valid) {
@@ -54,9 +67,24 @@ export class CreateCardComponent implements AfterViewInit{
   }
 
   createCard(): void {
-    this.cardService.createCard(this.cardData).subscribe(() => {
-      this.dialogRef.close(); // Close the dialog
+    const sub = this.cardService.createCard(this.cardData).subscribe({
+      next: (response) => {
+        if (response.succeeded) {
+          SwalHelpers.SwalSuccess('Card added successfully', 'Ok', () => {
+            this.closeDialog(true);
+          });
+        }
+      },
+      error: (err) => {
+        this.isLoading = false
+        this.closeDialog(false);
+      },
+      complete: () => {
+        this.isLoading = false
+        this.closeDialog();
+      }
     });
+    this.Subscriptions.push(sub);
   }
 
   onFileSelected(event: any): void {
@@ -71,7 +99,8 @@ export class CreateCardComponent implements AfterViewInit{
     }
   }
 
-  closeDialog(): void {
-    this.dialogRef.close();
+  closeDialog(result?: boolean): void {
+    this.dialogRef.close(result);
   }
+
 }

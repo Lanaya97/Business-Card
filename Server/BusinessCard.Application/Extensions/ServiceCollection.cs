@@ -1,7 +1,7 @@
 ﻿using BusinessCard.Application.Common.AssemblyReferences;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 
 namespace BusinessCard.Infrastructure.Services
@@ -10,6 +10,8 @@ namespace BusinessCard.Infrastructure.Services
     {
         public static void AddApplicationLayer(this IServiceCollection services)
         {
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
             AddFluentValidation(services);
             AddMediatRHandlers(services);
             AddAutoMapperProfiles(services);

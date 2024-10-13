@@ -37,8 +37,8 @@
 
           <mat-form-field appearance="fill">
             <mat-label>Phone</mat-label>
-            <input matInput placeholder="Phone" [(ngModel)]="cardData['phone']" name="phone" required>
-            <mat-error *ngIf="cardForm.controls['phone']?.invalid && cardForm.controls['phone']?.touched">
+            <input matInput placeholder="Phone" [(ngModel)]="cardData['number']" name="number" required>
+            <mat-error *ngIf="cardForm.controls['number']?.invalid && cardForm.controls['number']?.touched">
               Phone is required
             </mat-error>
           </mat-form-field>
@@ -110,7 +110,7 @@
       <div class="preview-card">
         <p>Name: {{ cardData['name'] }}</p>
         <p>Email: {{ cardData['email'] }}</p>
-        <p>Phone: {{ cardData['countryCode'] }} {{ cardData['phone'] }}</p>
+        <p>Phone: {{ cardData['countryCode'] }} {{ cardData['number'] }}</p>
         <p>Address: {{ cardData['street'] }}, {{ cardData['city'] }}, {{ cardData['zipcode'] }}</p>
         <p>Date of Birth: {{ cardData['dateOfBirth'] | date:'shortDate' }}</p>
         <p *ngIf="cardData['photo']">Photo: <img [src]="cardData['photo']" alt="Uploaded Photo" style="max-width: 100px;" /></p>

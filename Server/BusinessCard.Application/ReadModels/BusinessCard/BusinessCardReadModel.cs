@@ -6,6 +6,8 @@ namespace BusinessCard.Application.ReadModels.BusinessCard
 {
     public class BusinessCardReadModel
     {
+        public Guid Id { get; set; }
+
         public string Name { get; set; }
 
         public Gender Gender { get; set; }

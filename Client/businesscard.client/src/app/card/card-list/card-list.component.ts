@@ -5,6 +5,9 @@ import { PageEvent } from '@angular/material/paginator';
 import { CardService } from '../services/card.service';
 import { BusinessCardReadModel } from '../models/business-card-model';
 import { Filter } from '../../common/filter';
+import { SwalHelpers } from '../../../utils/swal-helpers';
+import { CreateCardComponent } from '../create-card/create-card.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -50,7 +53,7 @@ export class CardListComponent implements OnInit, OnChanges {
     this.paginationChange.emit({ pageSize: this._pageSize, pageNumber: this._pageNumber });
   }
 
-  constructor(private cardService: CardService)
+  constructor(private dialog: MatDialog, private cardService: CardService)
   {
     this.filters = []
   }
@@ -93,10 +96,32 @@ export class CardListComponent implements OnInit, OnChanges {
     this.loadCards();
   }
 
-  deleteCard(id: number): void {
+  async openCreateCardDialog(): Promise<void> {
+    const dialogRef = this.dialog.open(CreateCardComponent, {
+      width: '80%', // Set the width as needed
+      height: '80%',
+      maxHeight: '90vh', // Optional: Set maxHeight directly when opening
+      disableClose: true,
+    });
+
+    // Await the result from the dialog
+    const result = await dialogRef.afterClosed().toPromise();
+
+    // Handle the result (if needed)
+    if (result) {
+      this.loadCards(this.filters);
+    }
+  }
+  deleteCard(id: string): void {
     this.cardService.deleteCard(id).subscribe(() => {
       this.dataSource.data = this.dataSource.data.filter(card => card.id !== id);
     });
+  }
+
+  onBtnDeleteClick(id: string) {
+    SwalHelpers.SwalWarning('Are you sure you want to delete this card?', 'Yes, I am Sure',
+      'No, Cancel', () => this.deleteCard(id)
+    )
   }
 }
 

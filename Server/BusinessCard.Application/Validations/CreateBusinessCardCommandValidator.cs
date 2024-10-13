@@ -23,11 +23,11 @@ namespace BusinessCard.Application.Validations
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required.")
-                .Must(IsValidEmail).WithMessage("Email Format is invalid")
+                .Must(IsValidEmail).WithMessage("Invalid email format")
                 .MustAsync(BeUniqueEmail).WithMessage("Business card with the same email already exists");
 
             RuleFor(x => x.Phone)
-                .NotEmpty().WithMessage("PhoneNumber is required.")
+                .NotEmpty().WithMessage("Invalid phone number format.")
                 .Length(8, 10).WithMessage("PhoneNumber Format is invalid")
                 .MustAsync(BeUniquePhoneNumber).WithMessage("Business card with the same phone number already exists");
         }

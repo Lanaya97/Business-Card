@@ -33,11 +33,11 @@ namespace BusinessCard.Infrastructure
             {
                 return await _context.SaveChangesAsync().ConfigureAwait(false) > 0;
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException)
             {
                 throw new DbUpdateConcurrencyException("Failed to insert or update Database due to concurrency issue");
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 throw new Exception("Failed to insert or update Database");
             }
@@ -48,11 +48,11 @@ namespace BusinessCard.Infrastructure
             {
                 return _context.SaveChanges() > 0;
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException)
             {
                 throw new DbUpdateConcurrencyException("Failed to insert or update Database due to concurrency issue");
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 throw new Exception("Failed to insert or update Database");
             }

@@ -16,12 +16,12 @@ export class CardService {
     return this.http.post<Result<BusinessCardReadModel[]>>(`${this.apiUrl}/search`, params);
   }
 
-  createCard(card: BusinessCard): Observable<BusinessCard> {
-    return this.http.post<BusinessCard>(this.apiUrl, card);
+  createCard(card: BusinessCard): Observable<Result<BusinessCard>> {
+    return this.http.post<Result<BusinessCard>>(this.apiUrl, card);
   }
 
-  deleteCard(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  deleteCard(id: string): Observable<Result<boolean>> {
+    return this.http.delete<Result<boolean>>(`${this.apiUrl}?id=${id}`);
   }
 
   exportToCsv(data: any): Observable<Blob> {

@@ -48,16 +48,6 @@ export class AppComponent {
     });
   }
 
-  openCreateCardDialog(): void {
-    this.dialog.open(CreateCardComponent, {
-      width: '80%', // Set the width as needed
-      height: '80%',
-      maxHeight: '90vh', // Optional: Set maxHeight directly when opening
-      disableClose: true,
-    });
-
-  }
-
   //#region events
 
   onApplyFiltersClick(menuTrigger: MatMenuTrigger) {
