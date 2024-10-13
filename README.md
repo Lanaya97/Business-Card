@@ -1,6 +1,9 @@
 # Business Card Assignment
 
 This project is a business card management system implemented using .NET and Angular. It follows design principles such as SOLID, Domain-Driven Design (DDD), Clean Architecture, CQRS, Fluent Validation, Middleware handling, and more.
+![alt text](https://github.com/Lanaya97/Business-Card-Assignment/blob/master/1.png?raw=true)
+![alt text](https://github.com/Lanaya97/Business-Card-Assignment/blob/master/2.png?raw=true)
+![alt text](https://github.com/Lanaya97/Business-Card-Assignment/blob/master/3.png?raw=true)
 
 ## Table of Contents
 - [Technologies Used](#technologies-used)
