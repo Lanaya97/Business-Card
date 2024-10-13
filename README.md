@@ -14,7 +14,7 @@ This project is a business card management system implemented using .NET and Ang
 - [Project Structure](#project-structure)
 
 ## Technologies Used
-- **Front-End:** Angular, Bootstrap
+- **Front-End:** Angular 18.2.7, Node 22.0.0, npm 10.5.1 -  Bootstrap
 - **Back-End:** .NET 7, CQRS, Fluent Validation
 - **Database:** MySQL - Entity Framework Core (Code-First approach)
 - **Other Concepts:** Clean Architecture, Domain-Driven Design (DDD), SOLID Principles
