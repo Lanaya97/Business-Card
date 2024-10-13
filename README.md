@@ -16,7 +16,7 @@ This project is a business card management system implemented using .NET and Ang
 ## Technologies Used
 - **Front-End:** Angular, Bootstrap
 - **Back-End:** .NET 7, CQRS, Fluent Validation
-- **Database:** Entity Framework Core (Code-First approach)
+- **Database:** MySQL - Entity Framework Core (Code-First approach)
 - **Other Concepts:** Clean Architecture, Domain-Driven Design (DDD), SOLID Principles
 
 ## Getting Started
@@ -49,7 +49,7 @@ dotnet run
 The database will be automatically created when the back-end server runs, and temporary data will be seeded into the database.
 
 ## Database
-The database connection string can be found in the appsettings.json file in the back-end project. The database is automatically created upon running the server and seeds with temporary data, so no manual setup is required.
+MySQL, The database connection string can be found in the appsettings.json file in the back-end project. The database is automatically created upon running the server and seeds with temporary data, so no manual setup is required.
 ## Design Principles
 This project follows several design principles and patterns to ensure clean, scalable, and maintainable code, including:
 
