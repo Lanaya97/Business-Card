@@ -31,34 +31,29 @@ To run the front-end Angular application, follow these steps:
 
 Open your terminal or command prompt and navigate to the front-end directory.
 Run the following command to install the necessary dependencies:
-bash
-Copy code
-npm install
+**npm install**
 Once the installation is complete, start the development server using:
-bash
-Copy code
-ng serve
+**ng serve**
 Open your browser and go to http://localhost:4200 to view the application.
 Running the Back-End
 Navigate to the back-end project directory.
 Open the appsettings.json file to configure the database connection string if needed.
 Run the back-end server using:
-bash
-Copy code
-dotnet run
-The database will be automatically created when the back-end server runs, and temporary data will be seeded into the database.
+**dotnet run**
+The database will be automatically created when the back-end server runs if MySQL user exists with the correct password, and temporary data will be seeded into the database.
 
 ## Database
-MySQL, The database connection string can be found in the appsettings.json file in the back-end project. The database is automatically created upon running the server and seeds with temporary data, so no manual setup is required.
+MySQL, ensure MySQL is installed and user is created, the database connection string can be found in the appsettings.json file in the back-end project. The database is automatically created upon running the server and seeds with temporary data, so no manual setup is required.
+
 ## Design Principles
 This project follows several design principles and patterns to ensure clean, scalable, and maintainable code, including:
 
-SOLID Principles
-Domain-Driven Design (DDD)
-Clean Architecture
-CQRS (Command Query Responsibility Segregation)
-Fluent Validation
-Middleware Handling
+- SOLID Principles
+- Domain-Driven Design (DDD)
+- Clean Architecture
+- CQRS (Command Query Responsibility Segregation)
+- Fluent Validation
+- Middleware Handling
 
 ## Data Import Formats
 
@@ -77,6 +72,7 @@ The CSV file should have the headers in the first row. Here's an example:
 Name,Gender,DateOfBirth,Email,CountryCode,Number,Street,City,ZipCode
 John Doe,Male,1990-01-01,john.doe@example.com,+1,1234567890,123 Elm Street,Springfield,12345
 ```
+
 ### XML Format
 Here is an example of the XML format:
 
@@ -98,10 +94,10 @@ Here is an example of the XML format:
 </ArrayOfCreateBusinessCardRequestDto>
 ```
 ### QR Code Json Format
+
 For QR code image uploads, the JSON data embedded within the QR code should follow this format:
 
 ```QR Code
-For QR code image uploads, the JSON data embedded within the QR code should follow this format:
 {
   "name": "John Doe",
   "gender": "Male",
