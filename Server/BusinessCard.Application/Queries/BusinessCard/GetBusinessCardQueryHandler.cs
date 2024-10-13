@@ -30,7 +30,7 @@ namespace BusinessCard.Application.Queries.BusinessCard
 
             #region Filtering
 
-            /// Filtering out soft deleted records.
+            /// Filtering out soft deleted records as initial step.
             Expression<Func<Domain.BusinessCard, bool>> predicate = x => x.DateDeleted == null;
 
             foreach (var filter in request.Options.Filters)
@@ -43,13 +43,21 @@ namespace BusinessCard.Application.Queries.BusinessCard
                     case "email":
                         predicate = predicate.And(x => x.Email.Contains(filter.Value));
                         break;
+                    case "phone":
+                        predicate = predicate.And(x => x.PhoneNumber.Number.Contains(filter.Value));
+                        break;
                     case "gender":
                         if(Enum.TryParse(filter.Value, true, out Gender gender))
                           predicate = predicate.And(x => x.Gender == gender);
                         break;
-                    //case "dateOfBirth":
-                    //    predicate = predicate.And(wh => (wh.IsActive == filter.ToBoolean()));
-                    //    break;
+                    case "startDate":
+                        DateTime from = DateTime.Parse(filter.Value);
+                        predicate = predicate.And(x => x.DateOfBirth >= from);
+                        break;
+                    case "endDate":
+                        DateTime to = DateTime.Parse(filter.Value);
+                        predicate = predicate.And(x => x.DateOfBirth <= to);
+                        break;
                 }
             }
             #endregion

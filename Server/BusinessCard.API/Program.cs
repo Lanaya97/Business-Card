@@ -1,4 +1,7 @@
 using BusinessCard.API.JsonConverters;
+using BusinessCard.API.Middleware;
+using BusinessCard.Infrastructure;
+using BusinessCard.Infrastructure.DatabaseContext;
 using BusinessCard.Infrastructure.Services;
 
 
@@ -11,6 +14,10 @@ builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
 builder.Services.AddInfrastructureLayer(builder.Configuration);
 builder.Services.AddApplicationLayer();
 
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+
+
+
 builder.Services.AddControllers()
         .AddNewtonsoftJson(options =>
         {
@@ -21,22 +28,31 @@ builder.Services.AddControllers()
 
         }
 );
+
+builder.Services.AddHttpContextAccessor();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
          {
-                options.AddPolicy("AllowAllOrigins",
-                    builder => builder.AllowAnyOrigin()
-                                      .AllowAnyMethod()
-                                      .AllowAnyHeader());
+             options.AddPolicy("AllowAllOrigins",
+                 builder => builder.AllowAnyOrigin()
+                                   .AllowAnyMethod()
+                                   .AllowAnyHeader());
          });
 
 
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await DbInitializer.SeedAsync(dbContext);
+}
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
@@ -49,6 +65,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAllOrigins");
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

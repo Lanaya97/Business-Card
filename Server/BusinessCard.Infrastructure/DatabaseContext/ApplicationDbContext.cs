@@ -1,9 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using System;
-using System.IO;
+﻿using Microsoft.EntityFrameworkCore;
 
 
 namespace BusinessCard.Infrastructure.DatabaseContext
@@ -11,9 +6,14 @@ namespace BusinessCard.Infrastructure.DatabaseContext
 
     public partial class ApplicationDbContext : DbContext
     {
+        const string SCHEMA = "BusinessCardSchema";
+
         public DbSet<Domain.BusinessCard> BusinessCards { get; set; }
 
-        public ApplicationDbContext() { }
+        private ApplicationDbContext() 
+        {
+        }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
@@ -26,9 +26,12 @@ namespace BusinessCard.Infrastructure.DatabaseContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<Domain.BusinessCard>(entity =>
             {
+
                 entity.ToTable(nameof(Domain.BusinessCard));
+
 
                 entity.HasKey(e => e.Id);
 
@@ -59,8 +62,8 @@ namespace BusinessCard.Infrastructure.DatabaseContext
                 entity.OwnsOne(e => e.PhoneNumber, a =>
                 {
                     a.WithOwner();
-                    a.Property(p => p.CountryCode).HasColumnName("CountryCode").IsRequired();
-                    a.Property(p => p.Number).HasColumnName("PhoneNumber").IsRequired();
+                    a.Property(p => p.CountryCode).HasColumnName("CountryCode").IsRequired().HasMaxLength(4);
+                    a.Property(p => p.Number).HasColumnName("PhoneNumber").IsRequired().HasMaxLength(10);
 
                     a.HasIndex(p => p.Number).IsUnique();
 

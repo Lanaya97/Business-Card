@@ -8,9 +8,15 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Xml.Serialization;
+using ZXing;
+using ZXing.Common;
+using ZXing.Windows.Compatibility;
+
 
 namespace BusinessCard.Server.Controllers
 {
@@ -124,22 +130,22 @@ namespace BusinessCard.Server.Controllers
                 return BadRequest("File is empty.");
             }
 
-            var serializer = new XmlSerializer(typeof(List<CreateBusinessCardRequestDto>));
+            var serializer = new XmlSerializer(typeof(CreateBusinessCardRequestDtoWrapper));
 
             using (var stream = file.OpenReadStream())
             {
-                var data = (List<CreateBusinessCardRequestDto>)serializer.Deserialize(stream);
+                var wrapper = (CreateBusinessCardRequestDtoWrapper)serializer.Deserialize(stream);
 
-                if(data == null || data.Count == 0)
+                if (wrapper == null || wrapper.BusinessCards == null || wrapper.BusinessCards.Count == 0)
                 {
-                    return BadRequest("An error occured while trying to read the data.");
+                    return BadRequest("An error occurred while trying to read the data.");
                 }
 
                 List<Guid> ids = new();
-                foreach (var record in data)
+                foreach (var record in wrapper.BusinessCards)
                 {
-                  var result = await _mediator.Send(new CreateBusinessCardCommand()
-                  {
+                    var result = await _mediator.Send(new CreateBusinessCardCommand()
+                    {
                         Name = record.Name,
                         Email = record.Email,
                         Gender = record.Gender,
@@ -150,13 +156,87 @@ namespace BusinessCard.Server.Controllers
                         City = record.City,
                         ZipCode = record.ZipCode,
                         Photo = record.Photo
-                  });
+                    });
 
                     ids.Add(result.Data);
                 }
 
                 return Ok(new Result<List<Guid>>() { Data = ids });
             }
+        }
+
+        [HttpPost("import/qr")]
+        public async Task<IActionResult> UploadQrCodeAsync(IFormFile file)
+        {
+            var result = new Result<Guid>();
+
+            if (file == null || file.Length == 0)
+            {
+                result.AddError("Please upload a valid image file.");
+                return BadRequest(result);
+            }
+
+            try
+            {
+                using var stream = file.OpenReadStream();
+                using var bitmap = new Bitmap(stream);
+
+                var luminanceSource = new BitmapLuminanceSource(bitmap);
+
+                var reader = new BarcodeReader();
+                var data = reader.Decode(luminanceSource);
+
+                if (data == null)
+                {
+                    result.AddError("No QR code detected in the image.");
+                    return BadRequest(result);
+                }
+
+                // Attempt to parse the QR code data as JSON
+                CreateBusinessCardRequestDto? cardInfo;
+                try
+                {
+                    cardInfo = JsonConvert.DeserializeObject<CreateBusinessCardRequestDto>(data.Text);
+
+                    if (cardInfo == null)
+                    {
+                        result.AddError("No QR code detected in the image.");
+                        return BadRequest(result);
+                    }
+
+                    var card = await _mediator.Send(new CreateBusinessCardCommand()
+                    {
+                        Name = cardInfo.Name,
+                        Email = cardInfo.Email,
+                        Gender = cardInfo.Gender,
+                        DateOfBirth = cardInfo.DateOfBirth,
+                        CountryCode = cardInfo.CountryCode,
+                        Phone = cardInfo.Number,
+                        Street = cardInfo.Street,
+                        City = cardInfo.City,
+                        ZipCode = cardInfo.ZipCode,
+                        Photo = cardInfo.Photo
+                    });
+
+                    if(card.Succeeded)
+                        return Ok(card);
+                    else
+                        return BadRequest(card);
+                }
+                catch (JsonException)
+                {
+                    result.AddError("QR code data is not in the expected JSON format.");
+                    return BadRequest(result);
+                }
+
+
+            }
+            catch (Exception)
+            {
+                result.AddError("Unknown error, please contact customer service for help.");
+                return BadRequest(result);
+            }
+
         }
         #endregion
 
